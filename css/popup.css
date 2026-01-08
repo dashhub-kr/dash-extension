@@ -1,0 +1,330 @@
+/* ==========================================================================
+   DashHub Extension Popup CSS
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Imports & Fonts
+   -------------------------------------------------------------------------- */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@700;900&display=swap');
+
+/* --------------------------------------------------------------------------
+   2. Design Tokens (Variables)
+   -------------------------------------------------------------------------- */
+:root {
+  --bg-primary: #f8fafc;
+  /* slate-50 */
+  --bg-secondary: #f1f5f9;
+  /* slate-100 */
+  --bg-card: rgba(255, 255, 255, 0.8);
+
+  --text-primary: #1e293b;
+  /* slate-800 */
+  --text-secondary: #64748b;
+  /* slate-500 */
+  --text-muted: #94a3b8;
+  /* slate-400 */
+
+  --accent-primary: #4f46e5;
+  /* indigo-600 */
+  --accent-hover: #4338ca;
+  /* indigo-700 */
+  --accent-secondary: #06b6d4;
+  /* cyan-500 */
+
+  --border-color: rgba(255, 255, 255, 0.6);
+  --border-subtle: #e2e8f0;
+  /* slate-200 */
+
+  --success: #10b981;
+  /* emerald-500 */
+  --danger: #ef4444;
+  /* red-500 */
+
+  --shadow-accent: rgba(79, 70, 229, 0.1);
+}
+
+/* --------------------------------------------------------------------------
+   3. Global Reset & Base
+   -------------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 360px;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, #eef2ff 100%);
+  color: var(--text-primary);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Open Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   4. Background Decoration (Blobs)
+   -------------------------------------------------------------------------- */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.4;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body::before {
+  background: rgba(99, 102, 241, 0.4);
+  top: -40px;
+  right: -40px;
+}
+
+body::after {
+  background: rgba(6, 182, 212, 0.4);
+  bottom: -40px;
+  left: -40px;
+}
+
+/* --------------------------------------------------------------------------
+   5. Layout Container
+   -------------------------------------------------------------------------- */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   6. Header & Typography
+   -------------------------------------------------------------------------- */
+.header {
+  text-align: center;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+#title {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.logo-dash {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  color: #2563EB;
+  -webkit-text-fill-color: #2563EB;
+}
+
+.logo-hub {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: #334155;
+  -webkit-text-fill-color: #334155;
+}
+
+.text-accent {
+  color: var(--accent-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   7. Card Component
+   -------------------------------------------------------------------------- */
+.card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 8px 32px -8px var(--shadow-accent);
+}
+
+.onboarding {
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: var(--text-secondary);
+}
+
+.onboarding strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   8. Buttons & Links
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: none;
+  width: 100%;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-hover) 100%);
+  color: white;
+  box-shadow: 0 4px 14px -2px rgba(79, 70, 229, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px -2px rgba(79, 70, 229, 0.5);
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+}
+
+.repo-link {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  word-break: break-all;
+  text-align: center;
+}
+
+.link {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.feature-request {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   9. Toggle Switch
+   -------------------------------------------------------------------------- */
+.toggle-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+#onffbox {
+  display: none;
+}
+
+#onffmain {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  width: 52px;
+  height: 28px;
+  border-radius: 9999px;
+  background-color: var(--border-subtle);
+  border: none;
+  transition: 0.3s;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#onffball {
+  position: absolute;
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  top: 3px;
+  left: 3px;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(138, 138, 138, 0.15);
+  transition: 0.3s;
+}
+
+#onffbox:checked+#onffmain {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+}
+
+#onffbox:checked+#onffmain #onffball {
+  left: 27px;
+  background-color: white;
+}
+
+/* --------------------------------------------------------------------------
+   10. Footer Socials
+   -------------------------------------------------------------------------- */
+.footer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 4px;
+  padding-top: 12px;
+  padding-bottom: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.social-link {
+  color: var(--text-muted);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.social-link:hover {
+  color: var(--accent-primary);
+  background: rgba(79, 70, 229, 0.1);
+}

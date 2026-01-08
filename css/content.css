@@ -1,0 +1,273 @@
+/* ==========================================================================
+   DashHub Content Script CSS
+   Scope: Injected into BOJ & SWEA pages
+   Prefix: .dh- (Strictly enforced to prevent style leaks)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Layout & Positioning
+   -------------------------------------------------------------------------- */
+#dh-progress-anchor-element {
+    margin-right: 20px !important;
+}
+
+.dh-button-wrap {
+    display: inline-block;
+}
+
+.dh-update {
+    display: inline-block;
+    margin-right: 20px;
+    padding-top: 0%;
+    width: fit-content !important;
+    color: #0078c3 !important;
+    position: relative !important;
+}
+
+.dh-loading-wrap {
+    display: inline-block;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.dh-loading-number {
+    display: inline-block;
+}
+
+/* --------------------------------------------------------------------------
+   2. Components: Spinner / Progress
+   -------------------------------------------------------------------------- */
+.dh-progress {
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    border: 3px solid rgba(33, 150, 243, 0.2);
+    border-radius: 50%;
+    border-top-color: #2196F3;
+    animation: dh-spin 0.8s linear infinite;
+    -webkit-animation: dh-spin 0.8s linear infinite;
+}
+
+@keyframes dh-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes dh-spin {
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   3. Components: Status Indicators (Success/Fail)
+   -------------------------------------------------------------------------- */
+#dh-progress-elem.markuploaded {
+    border: none;
+    animation: none;
+    width: 1.5em;
+    height: 1.5em;
+    position: relative;
+    background-color: #4CAF50;
+    border-radius: 50%;
+    animation: dh-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+#dh-progress-elem.markuploaded::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -60%) rotate(45deg);
+    animation: dh-check-draw 0.4s ease-out 0.25s forwards;
+}
+
+@keyframes dh-check-draw {
+    0% {
+        width: 0;
+        height: 0;
+    }
+
+    40% {
+        width: 0.4em;
+        height: 0;
+    }
+
+    100% {
+        width: 0.4em;
+        height: 0.8em;
+    }
+}
+
+#dh-progress-elem.markuploadfailed {
+    border: none;
+    animation: none;
+    width: 1.5em;
+    height: 1.5em;
+    position: relative;
+    background-color: #F44336;
+    border-radius: 50%;
+    animation: dh-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+#dh-progress-elem.markuploadfailed::after {
+    content: '×';
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+@keyframes dh-pop {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   4. Components: Deletion Board
+   -------------------------------------------------------------------------- */
+.dh-deletion-board {
+    display: 'block';
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.dh-deletion-board-close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.dh-deletion-list {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    height: 60%;
+    overflow: scroll;
+}
+
+.dh-button:hover,
+.dh-button:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   5. Components: Toast Notification
+   -------------------------------------------------------------------------- */
+.dh-toast-notification {
+    min-width: 150px;
+    height: auto;
+    background-color: white;
+    border-radius: 10px !important;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    bottom: 50px;
+    margin: 50px;
+    padding: 10px;
+    right: 20px;
+    position: fixed;
+    z-index: 10000;
+    display: flex;
+    flex-direction: row;
+}
+
+.dh-toast-notification:hover {
+    cursor: pointer;
+}
+
+.dh-message-container {
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+}
+
+/* --------------------------------------------------------------------------
+   6. SWEA Specific: Tooltips & Buttons
+   -------------------------------------------------------------------------- */
+#dh-submit-button-element {
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+/* Tooltip styles prefixed with dh- */
+.dh-tooltipped {
+    position: relative;
+}
+
+.dh-tooltipped::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 140%;
+    left: 50%;
+    transform: translateX(-50%) scale(0.8);
+    background: #24292e;
+    color: #fff;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 16px;
+    font-size: 13px;
+    white-space: pre-wrap;
+    text-align: center;
+    z-index: 9999;
+    min-width: 240px;
+    pointer-events: none;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    line-height: 1.5;
+    font-weight: 700;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s cubic-bezier(0.5, 0, 0, 1.3);
+    filter: none;
+    transform-origin: bottom center;
+}
+
+.dh-tooltipped::before {
+    content: '';
+    position: absolute;
+    bottom: 121%;
+    left: 50%;
+    transform: translateX(-50%) scale(0.8);
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 12px solid #24292e;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s cubic-bezier(0.5, 0, 0, 1.3);
+    transform-origin: top center;
+}
+
+.dh-tooltipped:hover::after,
+.dh-tooltipped:hover::before {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) scale(1);
+}
