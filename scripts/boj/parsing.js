@@ -204,6 +204,13 @@ function parsingResultTableList(doc) {
 }
 
 /**
+ * Check if the result table exists
+ */
+function isExistResultTable() {
+  return document.getElementById("status-table") !== null;
+}
+
+/**
  * Parse data from the submission screen table
  */
 function findFromResultTable() {
