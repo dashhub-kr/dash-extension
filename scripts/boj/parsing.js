@@ -45,6 +45,8 @@ async function findData(submissionData) {
           submissionData = { ...submissionData, ...found };
         }
       }
+      // Refresh UI Timeout (Keep Alive)
+      startUploadCountDown();
       pollCount++;
     }
 

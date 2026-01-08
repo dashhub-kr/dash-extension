@@ -53,6 +53,9 @@ function markAsUploadFailed() {
  * Start Upload Countdown (10s timeout)
  */
 function startUploadCountDown() {
+  if (uploadState.countdown) {
+    clearTimeout(uploadState.countdown);
+  }
   uploadState.uploading = true;
   uploadState.countdown = setTimeout(() => {
     if (uploadState.uploading === true) {
