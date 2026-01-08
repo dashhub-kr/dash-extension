@@ -41,8 +41,9 @@
     display: inline-block;
     width: 1.5em;
     height: 1.5em;
+    box-sizing: border-box;
     border: 3px solid rgba(33, 150, 243, 0.2);
-    border-radius: 50%;
+    border-radius: 50% !important;
     border-top-color: #2196F3;
     animation: dh-spin 0.8s linear infinite;
     -webkit-animation: dh-spin 0.8s linear infinite;
@@ -70,7 +71,7 @@
     height: 1.5em;
     position: relative;
     background-color: #4CAF50;
-    border-radius: 50%;
+    border-radius: 50% !important;
     animation: dh-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
@@ -111,7 +112,7 @@
     height: 1.5em;
     position: relative;
     background-color: #F44336;
-    border-radius: 50%;
+    border-radius: 50% !important;
     animation: dh-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 

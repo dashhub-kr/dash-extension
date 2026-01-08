@@ -10,7 +10,7 @@ function renderLoadingUI() {
   if (elem !== undefined) {
     elem = document.createElement("span");
     elem.id = "dh-progress-anchor-element";
-    elem.className = "dh_loading_wrap";
+    elem.className = "dh-loading-wrap";
     elem.style = "margin-left: 10px; padding-top: 0px;";
   }
   elem.innerHTML = `<div id="dh-progress-elem" class="dh-progress"></div>`;
@@ -160,5 +160,3 @@ function convertImageTagAbsoluteURL(doc = document) {
     return x;
   });
 }
-
-
