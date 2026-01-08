@@ -16,6 +16,7 @@ async function findData(submissionData) {
     "런타임 에러",
     "컴파일 에러",
     "출력 형식",
+    "점",
   ];
 
   try {
@@ -56,7 +57,8 @@ async function findData(submissionData) {
     }
 
     // Reset memory/runtime if not accepted
-    if (!result.includes("맞았습니다")) {
+    // "맞았습니다" or "점" (score) should preserve memory/runtime
+    if (!result.includes("맞았습니다") && !result.includes("점")) {
       submissionData.memory = -1;
       submissionData.runtime = -1;
     }
