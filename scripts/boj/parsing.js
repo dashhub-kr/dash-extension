@@ -138,6 +138,17 @@ async function createSubmissionMetadata(submissionData) {
   };
 }
 
+/**
+ * Find the current user's username from the navigation bar
+ */
+function findUsername() {
+  const el = document.querySelector("ul.loginbar > li > a");
+  if (isNull(el)) return null;
+  const text = el.textContent.trim();
+  if (text === "로그인" || text === "회원가입") return null;
+  return text;
+}
+
 function findUsernameOnUserInfoPage() {
   const el = document.querySelector("div.page-header > h1");
   if (isNull(el)) return null;
