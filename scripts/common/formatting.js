@@ -6,7 +6,6 @@
 const PLATFORM_PATHS = {
     BAEKJOON: "BOJ",
     SWEA: "SWEA",
-    PROGRAMMERS: "Programmers",
 };
 
 /**
