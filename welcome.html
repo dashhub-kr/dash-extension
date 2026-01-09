@@ -75,18 +75,29 @@
 
       <!-- 3. Commit Mode -->
       <div style="display: none" id="commit_mode" class="card">
-        <h2 class="card-title">연결 완료!</h2>
-        <p id="repo_url" class="repo-link" style="text-align: center"></p>
-        <p class="text-secondary" style="text-align: center">
-          이제 문제 풀이를 제출하면 자동으로 GitHub에 커밋됩니다.
-        </p>
-        <p id="commit_condition_display" class="text-secondary" style="text-align: center; margin-top: 12px">
-          현재 기록 대상:
-          <strong id="current_commit_condition">모든 제출</strong>
-        </p>
-        <p class="text-secondary" style="text-align: center; font-size: 13px; margin-top: 8px">
-          설정을 변경하려면 연결을 해제하고 다시 연결해주세요.
-        </p>
+        <div style="text-align: center; padding: 10px 0;">
+          <div style="margin-bottom: 16px;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+
+          <h2 class="card-title" style="margin-bottom: 8px;">연결 완료!</h2>
+          <p id="repo_url" class="repo-link" style="margin-bottom: 24px; font-weight: 500;"></p>
+
+          <div id="timer_container"
+            style="display: none; background: #f6f8fa; border-radius: 6px; padding: 12px; margin-bottom: 24px;">
+            <p class="text-secondary" style="font-size: 14px; margin: 0;">
+              자동으로 닫힙니다 <span id="auto_close_timer" style="font-weight: bold; color: #24292e;">3</span>
+            </p>
+          </div>
+
+          <button id="close_window_button" class="btn btn-primary" style="width: 100%; height: 40px;">
+            돌아가기 (닫기)
+          </button>
+        </div>
       </div>
     </div>
   </div>

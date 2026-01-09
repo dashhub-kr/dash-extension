@@ -39,13 +39,16 @@ const statusCode = (res, status, name) => {
       // Success: Change mode to 'commit'
       chrome.storage.local.set({ mode_type: "commit" }, () => {
         $("#error").hide();
-        $("#success").html(`성공적으로 생성되었습니다! <a target="blank" href="${res.html_url}">${name}</a>.`);
-        $("#success").show();
-        $("#unlink").show();
+        // Simply show the repo link text, not the success message over the button
+        const linkHtml = `<a target="_blank" href="${res.html_url}" style="text-decoration: none; color: #0366d6;">${name}</a>`;
+        $("#repo_url").html(linkHtml);
 
         // Update Layout
         document.getElementById("hook_mode").style.display = "none";
         document.getElementById("commit_mode").style.display = "block";
+
+        // Start Auto-close Timer
+        startAutoClose();
       });
 
       // Set Hook & Conditions
@@ -57,13 +60,31 @@ const statusCode = (res, status, name) => {
         },
         () => {
           console.log("새로운 리포지토리 훅과 커밋 조건이 성공적으로 설정되었습니다");
-          const conditionText = commitOnlySuccess ? "성공한 제출만" : "모든 제출";
-          $("#current_commit_condition").text(conditionText);
         }
       );
       break;
   }
 };
+
+const startAutoClose = () => {
+  $("#timer_container").show();
+  let timeLeft = 3;
+  const timerElement = $("#auto_close_timer");
+
+  const interval = setInterval(() => {
+    timeLeft--;
+    timerElement.text(timeLeft);
+    if (timeLeft <= 0) {
+      clearInterval(interval);
+      window.close();
+    }
+  }, 1000);
+};
+
+// Explicit Close Button
+$("#close_window_button").on("click", () => {
+  window.close();
+});
 
 /* --------------------------------------------------------------------------
    Helpers: Base64 Encoding
@@ -217,9 +238,16 @@ const linkRepo = (token, name, updateConfig = false) => {
             { mode_type: "commit", repo: res.html_url },
             () => {
               $("#error").hide();
-              $("#success").html(`성공적으로 연결되었습니다! <a target="blank" href="${res.html_url}">${name}</a>.`);
-              $("#success").show();
-              $("#unlink").show();
+              // Simply show the repo link text
+              const linkHtml = `<a target="_blank" href="${res.html_url}" style="text-decoration: none; color: #0366d6;">${name}</a>`;
+              $("#repo_url").html(linkHtml);
+
+              document.getElementById("hook_mode").style.display = "none";
+              document.getElementById("commit_mode").style.display = "block";
+
+              if (updateConfig) {
+                startAutoClose();
+              }
             }
           );
 
