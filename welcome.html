@@ -16,87 +16,159 @@
           <span class="logo-dash">Dash</span><span class="logo-hub">Hub</span>
         </h1>
       </div>
-      <p class="caption text-secondary">리포지토리 설정하고 바로 시작하기</p>
     </div>
 
     <div class="content">
-      <div class="status-message">
-        <p hidden id="error" class="text-danger"></p>
-        <p hidden id="success" class="text-success"></p>
-        <p hidden id="unlink" class="text-secondary">
-          잘못 연결했나요? <a class="link">연결 해제</a>.
-        </p>
-      </div>
+      <div class="content">
+        <!-- 1. Authenticate Mode -->
+        <div style="display: none" id="auth_mode" class="card">
+          <h2 class="card-title">로그인</h2>
+          <p class="text-secondary" style="text-align: center; margin-bottom: 24px">
+            서비스를 사용하려면 GitHub 인증이 필요합니다.
+          </p>
 
-      <!-- 1. Authenticate Mode -->
-      <div style="display: none" id="auth_mode" class="card">
-        <h2 class="card-title">로그인</h2>
-        <p class="text-secondary" style="text-align: center; margin-bottom: 24px">
-          서비스를 사용하려면 GitHub 인증이 필요합니다.
-        </p>
-        <div class="action-area">
-          <button id="login_button" class="btn btn-primary" style="background-color: #24292e; width: 100%">
-            <span style="margin-right: 8px">GitHub로 로그인</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- 2. Hook Mode -->
-      <div style="display: none" id="hook_mode" class="card">
-        <h2 class="card-title">리포지토리 설정</h2>
-
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="label">연결 방식</label>
-            <select id="type" class="input-select">
-              <option value="new" selected>private 리포지토리 생성</option>
-              <option value="link">기존 리포지토리 연결</option>
-            </select>
+          <div class="status-message" style="margin-bottom: 16px;">
+            <p hidden id="auth_error" class="text-danger"></p>
           </div>
 
-          <div class="form-group full-width">
-            <label class="label">리포지토리 이름</label>
-            <input autocomplete="off" id="name" placeholder="dash-hub" type="text" class="input-text" />
-          </div>
-
-          <div class="form-group full-width">
-            <label class="label">커밋 조건</label>
-            <select id="commitCondition" class="input-select">
-              <option value="all">모든 제출</option>
-              <option value="success">성공한 제출만</option>
-            </select>
+          <div class="action-area">
+            <button id="login_button" class="btn btn-primary" style="background-color: #24292e; width: 100%">
+              <span style="margin-right: 8px">GitHub로 로그인</span>
+            </button>
           </div>
         </div>
 
-        <div class="action-area">
-          <button id="hook_button" class="btn btn-primary">시작하기</button>
-        </div>
-      </div>
+        <!-- 2. Hook Mode -->
+        <div style="display: none" id="hook_mode" class="card">
+          <h2 class="card-title">리포지토리 설정</h2>
 
-      <!-- 3. Commit Mode -->
-      <div style="display: none" id="commit_mode" class="card">
-        <div style="text-align: center; padding: 10px 0;">
-          <div style="margin-bottom: 16px;">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-              <polyline points="22 4 12 14.01 9 11.01"></polyline>
-            </svg>
+          <!-- Quick Start Section -->
+          <div id="quick_start_area" style="text-align: center; margin-bottom: 24px;">
+            <p class="text-secondary" style="margin-bottom: 16px;">
+              가장 간편한 방법으로 시작해보세요.
+            </p>
+            <button id="quick_start_button" class="btn btn-primary"
+              style="width: 100%; padding: 12px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+              빠른 시작 (권장)
+            </button>
+            <p class="text-secondary" style="font-size: 12px;">
+              'dash-hub' 비공개 저장소를 자동으로 생성합니다.
+            </p>
+
+            <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 16px;">
+              <a id="advanced_settings_toggle"
+                style="cursor: pointer; color: #586069; font-size: 13px; text-decoration: underline;">
+                직접 설정하기 (고급)
+              </a>
+            </div>
           </div>
 
-          <h2 class="card-title" style="margin-bottom: 8px;">연결 완료!</h2>
-          <p id="repo_url" class="repo-link" style="margin-bottom: 24px; font-weight: 500;"></p>
+          <!-- Manual Setup Section (Hidden by default) -->
+          <div id="manual_setup_area" style="display: none;">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="label">연결 방식</label>
+                <select id="type" class="input-select">
+                  <option value="new" selected>Private 리포지토리 생성</option>
+                  <option value="link">기존 리포지토리 연결</option>
+                </select>
+              </div>
 
-          <div id="timer_container"
-            style="display: none; background: #f6f8fa; border-radius: 6px; padding: 12px; margin-bottom: 24px;">
-            <p class="text-secondary" style="font-size: 14px; margin: 0;">
-              자동으로 닫힙니다 <span id="auto_close_timer" style="font-weight: bold; color: #24292e;">3</span>
+              <div class="form-group full-width">
+                <label class="label">리포지토리 이름</label>
+                <input autocomplete="off" id="name" placeholder="dash-hub" type="text" class="input-text" />
+              </div>
+
+              <div class="form-group full-width">
+                <label class="label">커밋 조건</label>
+                <select id="commitCondition" class="input-select">
+                  <option value="all">모든 제출</option>
+                  <option value="success">성공한 제출만</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="action-area">
+              <button id="hook_button" class="btn btn-primary">시작하기</button>
+            </div>
+          </div>
+
+          <!-- Conflict Resolution Section (Hidden by default) -->
+          <div id="conflict_resolution_area" style="display: none; text-align: center; padding-top: 10px;">
+            <div style="margin-bottom: 20px; color: #64748b;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+
+            <h3 style="font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 8px;">
+              리포지토리 발견
+            </h3>
+
+            <p class="text-secondary" style="font-size: 15px; margin-bottom: 24px; line-height: 1.5;">
+              이미 동일한 이름의<br>
+              <strong id="conflict_repo_name" style="color: #0f172a;"></strong> 리포지토리가 존재합니다.
+            </p>
+
+            <button id="conflict_connect_btn" class="btn btn-primary" style="width: 100%; margin-bottom: 16px;">
+              기존 리포지토리와 연결
+            </button>
+
+            <div>
+              <a id="conflict_cancel_btn" class="link"
+                style="font-size: 14px; color: #64748b; text-decoration: underline;">
+                뒤로 가기
+              </a>
+            </div>
+          </div>
+
+          <!-- Status Messages for Hook Mode -->
+          <div class="status-message" style="margin-top: 16px;">
+            <p hidden id="hook_error" class="text-danger"></p>
+            <p hidden id="hook_success" class="text-success"></p>
+            <p hidden id="unlink" class="text-secondary">
+              잘못 연결했나요? <a class="link">연결 해제</a>.
             </p>
           </div>
+        </div>
 
-          <button id="close_window_button" class="btn btn-primary" style="width: 100%; height: 40px;">
-            돌아가기 (닫기)
-          </button>
+        <!-- 3. Commit Mode -->
+        <div style="display: none" id="commit_mode" class="card">
+          <div style="text-align: center; padding: 10px 0;">
+            <div style="margin-bottom: 16px;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+
+            <h2 class="card-title" style="margin-bottom: 8px;">연결 완료!</h2>
+            <p id="repo_url" class="repo-link" style="margin-bottom: 24px; font-weight: 500;"></p>
+
+            <div id="timer_container"
+              style="display: none; background: #f6f8fa; border-radius: 6px; padding: 12px; margin-bottom: 24px;">
+              <p class="text-secondary" style="font-size: 14px; margin: 0;">
+                자동으로 닫힙니다 <span id="auto_close_timer" style="font-weight: bold; color: #24292e;">3</span>
+              </p>
+            </div>
+
+            <button id="close_window_button" class="btn btn-primary" style="width: 100%; height: 40px;">
+              돌아가기 (닫기)
+            </button>
+
+            <div style="margin-top: 20px;">
+              <a id="unlink_commit" class="link" style="color: #94a3b8; font-size: 13px; text-decoration: underline;">
+                다른 리포지토리와 연결하시겠습니까? (연결 해제)
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

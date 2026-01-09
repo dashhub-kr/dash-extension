@@ -54,7 +54,7 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 /* --------------------------------------------------------------------------
@@ -123,7 +123,7 @@ body::after {
   max-width: 480px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 16px;
   position: relative;
   z-index: 1;
   animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -140,18 +140,18 @@ body::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
 .logo {
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
 }
 
 #title {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 800;
   margin: 0;
   white-space: nowrap;
@@ -202,7 +202,7 @@ body::after {
 .content {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 }
 
 .card {
@@ -293,7 +293,7 @@ body::after {
 
 .status-message {
   text-align: center;
-  min-height: 24px;
+  min-height: 0;
 }
 
 .btn {

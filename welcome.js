@@ -11,34 +11,71 @@ const getCommitCondition = () => $("#commitCondition").val();
 const statusCode = (res, status, name) => {
   switch (status) {
     case 304:
-      $("#success").hide();
-      $("#error").text(`리포지토리 생성 오류 - 잠시 후 다시 시도해주세요.`);
-      $("#error").show();
+      $("#hook_success").hide();
+      $("#hook_error").text(`리포지토리 생성 오류 - 잠시 후 다시 시도해주세요.`);
+      $("#hook_error").show();
       break;
     case 400:
-      $("#success").hide();
-      $("#error").text(`리포지토리 생성 오류 - 잘못된 요청입니다. 스크립트 충돌을 확인해주세요.`);
-      $("#error").show();
+      $("#hook_success").hide();
+      $("#hook_error").text(`리포지토리 생성 오류 - 잘못된 요청입니다. 스크립트 충돌을 확인해주세요.`);
+      $("#hook_error").show();
       break;
     case 401:
-      $("#success").hide();
-      $("#error").text(`권한 오류 - 인증 정보가 만료되었습니다. 다시 로그인해주세요.`);
-      $("#error").show();
+      $("#hook_success").hide();
+      $("#hook_error").text(`권한 오류 - 인증 정보가 만료되었습니다. 다시 로그인해주세요.`);
+      $("#hook_error").show();
       break;
     case 403:
-      $("#success").hide();
-      $("#error").text(`권한 오류 - 리포지토리 생성 권한이 없습니다.`);
-      $("#error").show();
+      $("#hook_success").hide();
+      $("#hook_error").text(`권한 오류 - 리포지토리 생성 권한이 없습니다.`);
+      $("#hook_error").show();
       break;
     case 422:
-      $("#success").hide();
-      $("#error").html(`이미 동일한 이름의 리포지토리가 존재합니다.<br>'기존 리포지토리 연결' 옵션을 선택해주세요.`);
-      $("#error").show();
+      $("#hook_error").hide();
+      $("#hook_success").hide();
+
+      // Toggle UI to Conflict Mode
+      $("#quick_start_area").hide();
+      $("#manual_setup_area").hide();
+      $("#conflict_resolution_area").fadeIn();
+
+      $("#conflict_repo_name").text(name);
+
+      // Attach one-time listener for connection (using off to prevent duplicate bindings if error repeats)
+      $("#conflict_connect_btn").off("click").on("click", function () {
+        $(this).prop("disabled", true).text("연결 중...");
+
+        chrome.storage.local.get(["DashHub_token", "DashHub_username"], (data) => {
+          const token = data.DashHub_token;
+          const username = data.DashHub_username;
+          if (token && username) {
+            linkRepo(token, `${username}/${name}`, true);
+          } else {
+            $("#conflict_resolution_area").hide();
+            $("#quick_start_area").show();
+            $("#hook_error").text("인증 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
+            $("#hook_error").show();
+          }
+        });
+      });
+
+      // Cancel/Back Handler
+      $("#conflict_cancel_btn").off("click").on("click", function () {
+        $("#conflict_resolution_area").hide();
+        // Restore default view (Quick Start visible, Manual hidden or as per previous state? 
+        // Simplest is to restore Quick Start and reset manual default)
+        $("#quick_start_area").fadeIn();
+        $("#manual_setup_area").hide();
+        $("#advanced_settings_toggle").text("직접 설정하기 (고급)");
+
+        // Reset button state just in case
+        $("#conflict_connect_btn").prop("disabled", false).text("기존 리포지토리와 연결");
+      });
       break;
     default:
       // Success: Change mode to 'commit'
       chrome.storage.local.set({ mode_type: "commit" }, () => {
-        $("#error").hide();
+        $("#hook_error").hide();
         // Simply show the repo link text, not the success message over the button
         const linkHtml = `<a target="_blank" href="${res.html_url}" style="text-decoration: none; color: #0366d6;">${name}</a>`;
         $("#repo_url").html(linkHtml);
@@ -196,11 +233,6 @@ const linkStatusCode = (status, name) => {
   switch (status) {
     case 301:
       $("#success").hide();
-      $("#error").html(`리포지토리가 이전되었습니다. <a target="blank" href="https://github.com/${name}">${name}</a><br> 리포지토리 이름을 다시 확인해주세요.`);
-      $("#error").show();
-      break;
-    case 403:
-      $("#success").hide();
       $("#error").html(`리포지토리에 대한 접근 권한이 없습니다. <a target="blank" href="https://github.com/${name}">${name}</a><br> 리포지토리에 대한 접근 권한을 확인해주세요.`);
       $("#error").show();
       break;
@@ -294,6 +326,9 @@ const unlinkRepo = () => {
 
   document.getElementById("hook_mode").style.display = "block";
   document.getElementById("commit_mode").style.display = "none";
+
+  // Hide the "Wrong connection?" message as we are now disconnected
+  $("#unlink").hide();
 };
 
 /* --------------------------------------------------------------------------
@@ -344,7 +379,19 @@ $("#hook_button").on("click", () => {
 $("#unlink a").on("click", () => {
   unlinkRepo();
   $("#unlink").hide();
-  $("#success").text("리포지토리 연결이 해제되었습니다.");
+  $("#hook_success").text("리포지토리 연결이 해제되었습니다.");
+});
+
+$("#unlink_commit").on("click", () => {
+  if (confirm("정말로 리포지토리 연결을 해제하시겠습니까?")) {
+    unlinkRepo();
+    // After unlink, we are in hook mode. 
+    // We should show a message? The existing unlinkRepo logic just resets mode.
+    // The previous logic for #unlink reset manually showed text.
+    // Let's set the text in the newly visible hook_mode
+    $("#hook_success").text("리포지토리 연결이 해제되었습니다.");
+    $("#hook_success").show();
+  }
 });
 
 $("#login_button").on("click", () => {
@@ -352,6 +399,40 @@ $("#login_button").on("click", () => {
     oAuth2.begin();
   } else {
     alert("인증 모듈을 로드하는데 실패했습니다.");
+  }
+});
+
+/* --------------------------------------------------------------------------
+   Quick Start & UI Logic
+   -------------------------------------------------------------------------- */
+$("#quick_start_button").on("click", () => {
+  const DEFAULT_NAME = "dash-hub";
+
+  $("#error").hide();
+  $("#success").text("자동 설정 중입니다... 잠시만 기다려주세요.");
+  $("#success").show();
+
+  chrome.storage.local.get("DashHub_token", (data) => {
+    const token = data.DashHub_token;
+    if (!token) {
+      $("#error").text("인증 오류 - GitHub 로그인이 필요합니다.");
+      $("#error").show();
+      $("#success").hide();
+    } else {
+      // Default: New Repo (createRepo)
+      createRepo(token, DEFAULT_NAME);
+    }
+  });
+});
+
+$("#advanced_settings_toggle").on("click", function () {
+  const manualArea = $("#manual_setup_area");
+  if (manualArea.is(":visible")) {
+    manualArea.slideUp();
+    $(this).text("직접 설정하기 (고급)");
+  } else {
+    manualArea.slideDown();
+    $(this).text("접어두기");
   }
 });
 
