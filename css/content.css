@@ -217,6 +217,21 @@
 /* --------------------------------------------------------------------------
    6. SWEA Specific: Tooltips & Buttons
    -------------------------------------------------------------------------- */
+/* SWEA Specific Positioning & Sizing */
+.dh-loading-wrap-swea {
+    position: absolute;
+    right: 100%;
+    /* Left of button */
+    left: auto;
+    margin-right: 10px;
+    /* Centered in the 40px gap */
+    margin-left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px !important;
+    z-index: 100;
+}
+
 #dh-submit-button-element {
     transition: all 0.2s ease;
     position: relative;
