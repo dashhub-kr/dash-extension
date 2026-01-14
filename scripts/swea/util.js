@@ -102,7 +102,9 @@ function markAsUploaded(branches, directory) {
   if (isNull(elem)) return;
   elem.className = "markuploaded";
   const uploadedUrl = `https://github.com/${Object.keys(branches)[0]}/tree/${branches[Object.keys(branches)[0]]}/${directory}`;
-  elem.addEventListener("click", function () {
+  elem.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
     window.location.href = uploadedUrl;
   });
   elem.style.cursor = "pointer";

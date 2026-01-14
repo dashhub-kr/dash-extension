@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "대시허브 (DashHub)",
-  "version": "1.7.4",
+  "version": "1.7.5",
   "description": "BOJ 및 SWEA에서 제출한 코드를 로컬 스토리지에 기록하고 사용자가 연결한 개인 GitHub 리포지토리에 자동으로 커밋해 줍니다.",
   "author": "utact",
   "homepage_url": "https://github.com/utact/dash",
