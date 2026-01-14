@@ -16,7 +16,6 @@ async function findData(submissionData) {
     "런타임 에러",
     "컴파일 에러",
     "출력 형식",
-    "점",
   ];
 
   try {
@@ -35,7 +34,7 @@ async function findData(submissionData) {
     // Polling: Max 60 times (2s * 60 = 2min)
     let result = submissionData.result;
     let pollCount = 0;
-    while (!FINAL_RESULTS.some((r) => result && result.includes(r)) && pollCount < 60) {
+    while (!FINAL_RESULTS.some((r) => result && result.includes(r)) && !/\d+점/.test(result) && pollCount < 60) {
       await new Promise((res) => setTimeout(res, 2000));
       let table = findFromResultTable();
       if (!isEmpty(table)) {
@@ -51,11 +50,9 @@ async function findData(submissionData) {
     }
 
     // If result not finalized
-    if (!FINAL_RESULTS.some((r) => result && result.includes(r))) {
-      submissionData.memory = -1;
-      submissionData.runtime = -1;
-      submissionData.result = "채점 결과 미확정";
-      return { ...submissionData, memory: -1, runtime: -1, result: "채점 결과 미확정" };
+    if (!FINAL_RESULTS.some((r) => result && result.includes(r)) && !/\d+점/.test(result)) {
+      console.warn("DashHub: 채점 결과가 확정되지 않아 업로드를 중단합니다.");
+      return null; // Abort upload
     }
 
     // Reset memory/runtime if not accepted

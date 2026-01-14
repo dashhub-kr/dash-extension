@@ -211,20 +211,20 @@ async function parseData() {
     const infoDiv = targetRow.querySelector("div.info");
 
     if (infoDiv) {
-      language = infoDiv.querySelector("ul > li:nth-child(1) > span:nth-child(1)").textContent.trim();
+      language = infoDiv.querySelector("ul > li:nth-child(1) > span:nth-child(1)")?.textContent?.trim() || "Unknown";
       memory = infoDiv
         .querySelector("ul > li:nth-child(2) > span:nth-child(1)")
-        .textContent.trim()
-        .toUpperCase()
-        .replace(/,/g, "");
+        ?.textContent?.trim()
+        ?.toUpperCase()
+        ?.replace(/,/g, "") || "0";
       runtime = infoDiv
         .querySelector("ul > li:nth-child(3) > span:nth-child(1)")
-        .textContent.trim()
-        .replace(/,/g, "");
+        ?.textContent?.trim()
+        ?.replace(/,/g, "") || "0";
       length = infoDiv
         .querySelector("ul > li:nth-child(4) > span:nth-child(1)")
-        .textContent.trim()
-        .replace(/,/g, "");
+        ?.textContent?.trim()
+        ?.replace(/,/g, "") || "0";
     } else {
       console.warn("DashHub: 행에서 info div를 찾을 수 없어 Regex로 대체합니다");
       const rowText = targetRow.innerText;

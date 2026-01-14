@@ -28,6 +28,8 @@ const languages = {
   "Boo": "boo",
   "Brainf**k": "bf",
   "C": "c",
+  "C (Clang)": "c",
+  "C (GCC)": "c",
   "C#": "cs",
   "C# 3.0 (Mono)": "cs",
   "C# 6.0 (Mono)": "cs",

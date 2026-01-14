@@ -7,9 +7,10 @@
  */
 function renderLoadingUI() {
   let elem = document.getElementById("dh-progress-anchor-element");
-  if (elem !== undefined) {
+  if (!elem) {
     elem = document.createElement("span");
     elem.id = "dh-progress-anchor-element";
+    elem.className = "dh-loading-wrap dh-loading-wrap-swea";
   }
   elem.innerHTML = `<div id="dh-progress-elem" class="dh-progress"></div>`;
 
@@ -22,7 +23,30 @@ function renderLoadingUI() {
     const rows = document.querySelectorAll("div.problem_smt");
     for (let i = 0; i < rows.length; i++) {
       if (rows[i].innerText.includes(myNickname)) {
-        target = rows[i].querySelector("div.info") || rows[i];
+        // Try to find the result status element (Pass/Fail)
+        const candidates = rows[i].querySelectorAll("span, div");
+        let statusEl = null;
+        for (const el of candidates) {
+          const txt = el.innerText.trim().toLowerCase();
+          if (["pass", "fail", "accept", "wrong"].some(s => txt.includes(s)) && txt.length < 10) {
+            statusEl = el;
+            break;
+          }
+        }
+
+        if (statusEl) {
+          const codeBtn = rows[i].querySelector("a.btn, button.btn");
+          if (codeBtn) {
+            target = codeBtn;
+            target.style.position = "relative";
+            target.style.marginLeft = "40px";
+          } else {
+            target = statusEl.closest("li") || statusEl;
+            target.style.position = "relative";
+          }
+        } else {
+          target = rows[i].querySelector("div.info") || rows[i];
+        }
         break;
       }
     }
@@ -31,7 +55,7 @@ function renderLoadingUI() {
   if (isNull(target)) {
     console.warn("DashHub: 진행 상태 아이콘을 표시할 대상을 찾을 수 없습니다.");
   } else {
-    target.prepend(elem);
+    target.append(elem);
   }
   startUploadCountDown();
 }
@@ -78,7 +102,9 @@ function markAsUploaded(branches, directory) {
   if (isNull(elem)) return;
   elem.className = "markuploaded";
   const uploadedUrl = `https://github.com/${Object.keys(branches)[0]}/tree/${branches[Object.keys(branches)[0]]}/${directory}`;
-  elem.addEventListener("click", function () {
+  elem.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
     window.location.href = uploadedUrl;
   });
   elem.style.cursor = "pointer";
