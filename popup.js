@@ -33,17 +33,20 @@ chrome.storage.local.get("DashHub_token", (data) => {
           chrome.storage.local.get("mode_type", (data2) => {
             if (data2 && data2.mode_type === "commit") {
               $("#commit_mode").show();
+              $("#caption").hide(); // Hide redundant caption in commit mode
+
               // Show Repository Stats
               chrome.storage.local.get(["stats", "DashHub_hook"], (data3) => {
                 const DashHubHook = data3.DashHub_hook;
                 if (DashHubHook) {
-                  $("#repo_url").html(
-                    `연결 정보: <a target="blank" style="color: cadetblue !important;" href="https://github.com/${DashHubHook}">${DashHubHook}</a>`
-                  );
+                  // Update Linked Repo Name & Link
+                  $("#linked_repo_name").text(DashHubHook);
+                  $("#linked_repo_name").attr("href", `https://github.com/${DashHubHook}`);
                 }
               });
             } else {
               $("#hook_mode").show();
+              $("#caption").show(); // Show caption in hook mode
             }
           });
         } else if (xhr.status === 401) {
@@ -52,6 +55,7 @@ chrome.storage.local.get("DashHub_token", (data) => {
             console.log("Invalid Token. Redirecting to OAuth...");
             action = true;
             $("#auth_mode").show();
+            $("#caption").show(); // Show caption in auth mode
           });
         }
       }
@@ -59,6 +63,21 @@ chrome.storage.local.get("DashHub_token", (data) => {
     xhr.open("GET", AUTHENTICATION_URL, true);
     xhr.setRequestHeader("Authorization", `token ${token}`);
     xhr.send();
+  }
+});
+
+/* --------------------------------------------------------------------------
+   Disconnect Handler
+   -------------------------------------------------------------------------- */
+$("#disconnect_btn").on("click", () => {
+  if (confirm("정말로 리포지토리 연결을 끊으시겠습니까?\n다시 연결하려면 리포지토리 설정 과정을 거쳐야 합니다.")) {
+    // 1. Reset Hook Info
+    chrome.storage.local.set({ mode_type: "hook", DashHub_hook: null }, () => {
+      // 2. UI Update
+      $("#commit_mode").hide();
+      $("#hook_mode").show();
+      console.log("Repository disconnected by user.");
+    });
   }
 });
 
